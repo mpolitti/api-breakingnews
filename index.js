@@ -1,8 +1,13 @@
 import express from 'express';
-import connectDatabase from './src/database/db.js'; 
+import connectDatabase from './src/database/database.js'; 
 import userRoute from './src/routes/user.route.js';
+import dotenv from 'dotenv';
 
-const port = 3000;
+dotenv.config();
+
+//A porta será recuperado do servidor que for instalado o webservice. Se não houver utiliza a 3000. Não pega do .env. local.
+const port = process.env.PORT || 3000;
+
 const app = express();
 
 try {
