@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -17,6 +18,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        select: false,
     },
     avatar: {
         type: String,
@@ -24,10 +26,17 @@ const UserSchema = new mongoose.Schema({
     },
     background: {
         type: String,
-        required : true,
+        required: true,
     }
 });
 
+//criptografa password
+UserSchema.pre("save", async function () {
+    this.password = await bcrypt.hash(this.password, 10);
+    //next();
+});
+
+//instância o User conform schema
 const User = mongoose.model("User", UserSchema);
 
 export default User;
