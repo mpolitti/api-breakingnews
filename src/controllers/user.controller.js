@@ -2,72 +2,90 @@ const userService = require("../services/user.service");
 
 const create = async (req, res) => {
 
-  const { name, username, email, password, avatar, background } = req.body;
+  try {
 
-  if (!name || !username || !email || !password || !avatar || !background) {
-    res.status(400).send({ "message": "Submit all fields for registration" });
-  }
+    const { name, username, email, password, avatar, background } = req.body;
 
-  const user = await userService.createService(req.body);
-
-  if (!user) {
-    return res.status(400).send({ message: "Error creating User" });
-  }
-
-  res.status(201).send({
-    message: "User created successfully",
-    user: {
-      id: user._id,
-      name,
-      username,
-      email,
-      avatar,
-      background
+    if (!name || !username || !email || !password || !avatar || !background) {
+      res.status(400).send({ "message": "Submit all fields for registration" });
     }
-  });
+
+    const user = await userService.createService(req.body);
+
+    if (!user) {
+      return res.status(400).send({ message: "Error creating User" });
+    }
+
+    res.status(201).send({
+      message: "User created successfully",
+      user: {
+        id: user._id,
+        name,
+        username,
+        email,
+        avatar,
+        background
+      }
+    });
+  }
+  catch (err) {
+    res.status(500).send({ message: err.message });
+  };
 
 }
 
 const findAll = async (req, res) => {
 
-  const users = await userService.findAllService();
+  try {
+    const users = await userService.findAllService();
 
-  if (!users.length === 0) {
-    return res.status(400).send({ message: "There are no registered users" });
-  }
+    if (!users.length === 0) {
+      return res.status(400).send({ message: "There are no registered users" });
+    }
 
-  res.send(users);
+    res.send(users);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  };
 
 }
 
 const findById = async (req, res) => {
 
-  const user = req.user; //está sendo enviado pelo middleware validUser
-  res.send(user);
+  try {
+    const user = req.user; //está sendo enviado pelo middleware validUser
+    res.send(user);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  };
 
 }
 
 const update = async (req, res) => {
 
-  const { name, username, email, password, avatar, background } = req.body;
+  try {
+    const { name, username, email, password, avatar, background } = req.body;
 
-  if (!name && !username && !email && !password && !avatar && !background) {
-    res.status(400).send({ "message": "Submit at least one field for update" });
-  }
+    if (!name && !username && !email && !password && !avatar && !background) {
+      res.status(400).send({ "message": "Submit at least one field for update" });
+    }
 
-  const { id, user } = req; //está sendo enviado pelo middleware validUser
+    const { id, user } = req; //está sendo enviado pelo middleware validUser
 
-  await userService.updateService(
-    id,
-    name,
-    username,
-    email,
-    password,
-    avatar,
-    background
-  );
+    await userService.updateService(
+      id,
+      name,
+      username,
+      email,
+      password,
+      avatar,
+      background
+    );
 
-  res.send({ message: "User successfully updated!" });
+    res.send({ message: "User successfully updated!" });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  };
 
 }
 

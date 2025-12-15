@@ -5,11 +5,17 @@ const userRoute = require("./src/routes/user.route");
 
 const port = 3000;
 
-connectDatabase();
+try {
+  
+  connectDatabase();
 
-app.use(express.json());
-app.use("/user", userRoute);
+  app.use(express.json());
+  app.use("/user", userRoute);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-})
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+  
+} catch (err) {
+  res.status(500).send({ message: err.message });
+};
